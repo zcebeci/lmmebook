@@ -1,2 +1,3 @@
 # lmmebook
-Genetic Paramters and Genomic Prediction
+Estimation of Genetic Parameters and Genomic Prediction for Genomic Selection
+
