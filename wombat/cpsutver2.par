@@ -1,0 +1,29 @@
+COM  Boğa Modeli (Sire model)
+# Siyah Alaca 1. Laktasyon 305 Gün Süt Verimi
+ANAL UNI
+PEDS cppedigree1.dat SIREMODEL
+DATA cpsutver2.dat
+  hayvan
+  baba
+  ana
+  byil 8
+  bay 12 
+  byas
+  sver305
+eNd
+
+MODEL 
+  FIX bay 
+  COV byas(1) 
+  RAN baba nrm
+  RAN byil 
+  SUBJ hayvan
+  TRAIT sver305 
+END MOD
+
+VAR baba 1
+150000
+VAR byil 1
+150000
+VAR residual 1
+150000

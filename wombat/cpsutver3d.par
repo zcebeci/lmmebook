@@ -1,0 +1,24 @@
+COMMENT Tekrarlanan Ölçümlü Özellikler Hayvan Modeli 5
+ANALYSIS UNI
+#PEDS cppedigreetum.dat
+DATA cpsutvertum.dat
+  hayvan 5000
+  baba
+  ana
+  byil 8
+  bay 12
+  byas
+  ls
+  sv305
+END DATA
+
+MODEL
+  COV byas(3)
+  RAN hayvan
+  TRAIT sv305
+END MODEL
+
+VAR residual 1
+  147000
+VAR hayvan 1
+  420000

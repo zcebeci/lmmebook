@@ -1,0 +1,26 @@
+COMMENT 1. Laktasyon Süt Verimi Analizi
+# Ceylanpinar TİM Siyah-Alaca Sürüsü
+ANALYSIS UNI
+PEDS cpsutver1.dat
+DATA cpsutver1.dat
+  hayvan
+  baba
+  ana
+  byil 8
+  bay 12
+  byas
+  sv305
+END DATA
+MODEL
+  FIX bay
+  COV byas(2,POL)
+  RAN hayvan NRM
+  RAN byil
+  TRAIT sv305
+END MODEL
+VAR residual 1
+  147000
+VAR hayvan 1
+  420000
+VAR byil 1
+  150000

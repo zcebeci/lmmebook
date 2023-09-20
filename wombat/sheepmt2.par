@@ -1,0 +1,30 @@
+COMMENT Çok Özellik için Hayvan Modeli 2
+# Koyun yapagi verisi
+ANALYSIS MUV 3
+
+PEDS sheepped1.dat
+
+DATA sheep1.dat GRP
+  TRNOS 1 2 3
+  traitno 3
+  hayvan
+  dyil 8
+  dtip 2
+  cins 2
+  NAMES typa lcap vca
+END 
+ 
+MODEL
+  FIX dyil
+  FIX dtip
+  FIX cins
+  RAN hayvan NRM 1 2 3
+  TRAIT typa 1
+  TRAIT lcap 2  
+  TRAIT vca 3 
+END MOD 
+
+VAR residual 3 DIAG
+ 0.27 1.03 0.9
+VAR hayvan 3 DIAG
+ 0.27 1.03 27.0

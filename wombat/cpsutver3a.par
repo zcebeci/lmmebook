@@ -1,0 +1,25 @@
+COMMENT Tekrarlanan Ölçümlü Özellikler Hayvan Modeli 2
+# Ceylanpınar Tarım İşletmesi Siyah Alaca sürüsü
+ANALYSIS UNI
+#PEDS cppedigreetum.dat
+DATA cpsutvertum.dat
+  hayvan 5000
+  baba
+  ana
+  byil 8
+  bay 12
+  byas 50
+  ls
+  sv305
+END DATA
+
+MODEL
+  FIX byas
+  RAN hayvan
+  TRAIT sv305
+END MODEL
+
+VAR residual 1
+  147000
+VAR hayvan 1
+  420000

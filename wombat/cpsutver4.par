@@ -1,0 +1,30 @@
+COMMENT Kalıcı Çevre Etkileri Hayvan Modeli 1
+# Ceylanpınar Tarım İşletmesi Siyah Alaca sürüsü
+# 1. Laktasyon 305-gün Süt Verimi
+# 
+ANALYSIS UNI
+PEDS cppedigree1.dat
+DATA cpsutvertum2.dat
+  hayvan 5000
+  baba
+  ana
+  kce 5000
+  byil 8
+  bay 12
+  byas 50
+  sv305
+END DATA
+MODEL
+  FIX byil
+  FIX bay
+  COV byas(1)
+  RAN hayvan NRM
+  RAN kce
+  TRAIT sv305
+END MODEL
+VAR residual 1
+  1.50
+VAR hayvan 1
+  1.50
+VAR kce 1
+  1.50
