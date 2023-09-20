@@ -1,0 +1,135 @@
+# EXAMPLES for GPE and GP
+#
+# BÖLÜM 3 -------------------------------------------------------------------
+
+# Örnek 3.1.1: Soyağacı verisinin hazırlanması
+# Soyağacı veri vektörleri 
+hayvan <- c(1:10)
+baba <- c(NA, NA, NA, 1, 1, NA, 5, 3, 7, 7)
+ana <- c(NA, NA, NA, 2, 2, NA, 6, 4, 8, 8)
+cinsiyet <- c(1, 2, 1, 2, 1, 2, 1, 2, 1, 2)
+durum <- c(1, 1, 0, 1, 0, 0, 0, 0, 0, 0)
+edurum <- c(1, 1, 0, 1, 0, 0, 1, 0, 1, 0)
+
+# Temel soyağacı veri çerçevesi
+ped <- data.frame(id=hayvan, sire=baba, dam=ana)
+ped
+
+# Genişletilmiş soyağacı veri çerçevesi
+suppressPackageStartupMessages(is_installed <- require(kinship2))
+if (!is_installed) {
+   install.packages("kinship2", repos="https://cloud.r-project.org")  
+   suppressPackageStartupMessages(require(kinship2))
+
+eped <- kinship2::pedigree(id=hayvan, dadid=baba, momid=ana,
+    sex=cinsiyet, status=durum, affected=edurum, missid=0)
+
+eped
+
+ped2 <- as.data.frame(eped)
+ped2
+
+# Soyağacı grafiği
+plot(eped, 
+    cex = 0.8, col = "dodgerblue", symbolsize = 2, branch = 0.6, packed = TRUE, 
+    align = c(1.5, 2), width = 8, density = c(-1, 35, 65, 20), 
+    angle = c(90, 65, 40, 0), keep.par = FALSE, pconnect = 0.5)
+
+#-------------------------------------------------------------------------
+# Örnek 3.1.2: Soyağacı verisinin kontrol edilmesi ve düzeltilmesi
+# Bağımlılık – Örnek 3.1.1
+#
+suppressPackageStartupMessages(installed <- require(QTLRel))
+if (!installed) {
+   install.packages("QTLRel", repos="https://cloud.r-project.org")  
+
+suppressPackageStartupMessages(require(QTLRel))
+
+colnames(ped)[1:3] <- c("id","father","mother")
+fped <- pedRecode(ped=ped, ids=NULL, all=FALSE, msg=TRUE)
+fped
+
+ped <- fped[,1:3]
+colnames(ped) <- c("hayvan","baba","ana")
+ped
+
+# Kurucu bireyler soyağacı
+fped0 <- fped[(fped$father==0 & fped$mother==0),]
+fped0
+
+# 1. generasyon bireyleri soyağacı
+fped1 <- fped[fped$generation==1,]
+fped1
+
+#--------------------------------------------------------------------
+# Örnek 3.1.3: buildA ile A matrisi hesaplama
+# Bağımlılık – Kod 3.1, Örnek 3.1.1
+#
+A <- buildA(ped)
+# Satır ve sütunları adlandırma
+colnames(A) <- rownames(A) <- ped[,1]
+A
+
+# Örnek 3.1.4: generateA ile A matrisi hesaplama
+# Bağımlılık – Kod 3.2, Örnek 3.1.1
+#
+res <- generateA(ped)
+A <- res$A
+colnames(A) <- rownames(A) <- ped[,1]
+A
+F <- res$F
+names(A) <- ped[,1]
+F
+
+#------------------------------------------------------------
+# Örnek 3.1.5: kinship2 ile A matrisi hesaplama
+# Bağımlılık – Örnek 3.1.1
+#
+suppressPackageStartupMessages(is_installed <- require(kinship2))
+if (!is_installed) {
+   install.packages("kinship2", repos="https://cloud.r-project.org")  
+   suppressPackageStartupMessages(require(kinship2))
+}
+K <- kinship(eped)
+A <- 2*K
+A
+
+#-------------------------------------------------------------------
+# Örnek 3.1.6: pedigreem ile A matrisinin oluşturulması 
+# Bağımlılık – Örnek 3.1.1
+#
+suppressPackageStartupMessages(installed <- require(pedigreemm))
+if (!installed) {
+  install.packages("pedigreemm", repos="https://cloud.r-project.org")  
+}
+suppressPackageStartupMessages(require(pedigreemm))
+oped <- with(ped, pedigree(sire=sire, dam=dam, label=id))
+U <- relfactor(oped)
+A <- crossprod(U)
+#A <- getA(oped) #Yukarıdaki U ve A hesaplamasını tek adımda verir
+
+colnames(A) <- rownames(A) <- ped[,1]
+A
+
+#--------------------------------------------------------------
+# Örnek 3.1.7: AGHMatrix ile akrabalık matrisinin oluşturulması
+# Bağımlılık – Örnek 3.1.1
+#
+suppressPackageStartupMessages(installed <- require(AGHmatrix))
+if (!installed) {
+   install.packages("AGHmatrix", repos="https://cloud.r-project.org")  
+   suppressPackageStartupMessages(require(AGHmatrix))
+}
+
+# Eksik kimlikleri NA'dan 0'a çevir ve soyağacı sütun adlarını yeniden düzenle
+oped <- apply(ped[,c(1:3)], 2, function(x) ifelse(is.na(x),0,x))
+colnames(oped) <- c("id","sire","dam")
+
+A <- Amatrix(oped, ploidy=2, dominance=FALSE)
+A 
+
+#--------------------------------------------------------------
+
+
+
+
